@@ -1,5 +1,6 @@
 import { plantList } from "../datas/plantList"
 import "../styles/ShoppingList.css"
+import CareScale from "./CareScale"
 
 /**
  * 
@@ -36,10 +37,11 @@ function ShoppingList () {
 
     const categories = plantList.reduce(
 		(acc, plant) =>
-            // Si la categorie se trouve dans notre acc : on ne fait rien 
-            // Sinon on concatene la nouvelle categorie a notre acc 
+            // Si la categorie se trouve dans notre acc : un le tableau precent  
+            // Sinon on concatene la nouvelle categorie a notre acc [Array]
+            // acc : est un tableau Array 
 			acc.includes(plant.category) ? acc : acc.concat(plant.category),
-		[] 
+		[]  // valeur initial
 	)
 
     console.log(categories)
@@ -60,6 +62,8 @@ function ShoppingList () {
                     <li key={plant.id} className="lmj-plant-item">
                         {plant.name} 
                         {plant.isSpecialOffer && <div className="lmj-sales">Soldes</div>}
+                        <CareScale careType="water" scaleValue={plant.water}  />
+                        <CareScale careType="light" scaleValue={plant.light}  />
                     </li> 
                 ))}
             </ul>
