@@ -51,15 +51,15 @@ function ShoppingList () {
         <div>
 
             {/* Recuperation des categorie */}
-            <ul>
+            {/* <ul>
                 {categories.map((cat) => (
                     <li key={cat}>{cat}</li>
                 ))}
-            </ul>
+            </ul> */}
 
             {/* Recuperation des plantes */}
             <ul className="lmj-plant-list">
-                {plantList.map((plant) => (
+                {plantList.map( (plant) => (
                     <PlantItem 
                         id={plant.id}
                         name={plant.name} 
