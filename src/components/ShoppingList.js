@@ -1,7 +1,9 @@
 import { plantList } from "../datas/plantList"
 import "../styles/ShoppingList.css"
-import CareScale from "./CareScale"
 import PlantItem from "./PlantItem"
+import Categories from "./Categories"
+
+import { useState } from "react"
 
 /**
  * 
@@ -34,18 +36,32 @@ The includes() method returns true if an array contains a specified value. The i
  * 
  */
 
-function ShoppingList () {
 
-    const categories = plantList.reduce(
-		(acc, plant) =>
-            // Si la categorie se trouve dans notre acc : un le tableau precent  
-            // Sinon on concatene la nouvelle categorie a notre acc [Array]
-            // acc : est un tableau Array 
-			acc.includes(plant.category) ? acc : acc.concat(plant.category),
-		[]  // valeur initial
+
+function ShoppingList ( {cart, updateCart} ) {
+
+    const [categorySelected, updateCategorySelected] = useState("")
+
+	function addToCart(name, price) {
+		const currentPlantSaved = cart.find((plant) => plant.name === name)
+		if (currentPlantSaved) {
+			const cartFilteredCurrentPlant = cart.filter(
+				(plant) => plant.name !== name
+			)
+			updateCart([
+				...cartFilteredCurrentPlant,
+				{ name, price, amount: currentPlantSaved.amount + 1 }
+			])
+		} else {
+			updateCart([...cart, { name, price, amount: 1 }])
+		}
+	}
+
+	const categories = plantList.reduce(
+		(acc, elem) =>
+			acc.includes(elem.category) ? acc : acc.concat(elem.category),
+		[]
 	)
-
-    console.log(categories)
 
     return (
         <div>
@@ -57,18 +73,34 @@ function ShoppingList () {
                 ))}
             </ul> */}
 
+            
+
+            <div className='lmj-shopping-list'>
+                <Categories categories={categories} 
+                            activeCategory={categorySelected} 
+                            setActiveCategory={updateCategorySelected} 
+                />
+            </div>
+
             {/* Recuperation des plantes */}
-            <ul className="lmj-plant-list">
-                {plantList.map( (plant) => (
-                    <PlantItem 
-                        id={plant.id}
-                        name={plant.name} 
-                        light={plant.light} 
-                        water={plant.water} 
-                        cover={plant.cover}
-                    />
-                ))}
-            </ul>
+            <ul className='lmj-plant-list'>
+				{plantList.map(({ id, cover, name, water, light, price, category }) =>
+					!categorySelected || categorySelected === category ? (
+						<div key={id}>
+							<PlantItem
+								cover={cover}
+								name={name}
+								water={water}
+								light={light}
+								price={price}
+							/>
+							<button onClick={() => addToCart(name, price)}>Ajouter</button>
+						</div>
+					) : null
+				)}
+			</ul>
+        
+
 
         </div>
     )
